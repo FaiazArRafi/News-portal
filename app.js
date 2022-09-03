@@ -1,12 +1,15 @@
+// catagories API added
 const loadNews = () => {
   const url = 'https://openapi.programming-hero.com/api/news/categories'
   fetch(url)
     .then(res => res.json())
     .then(data => displayCatagories(data.data.news_category))
+    .catch(error => console.log(error))
 }
-
+// catagories details added
 const displayCatagories = (catagories) => {
   const newsCatagories = document.getElementById('news-catagories');
+  document.getElementById('news-catagories').style.cursor = "pointer";
   catagories.forEach(i => {
     console.log(i)
     const catagorySpan = document.createElement('span');
@@ -18,6 +21,7 @@ const displayCatagories = (catagories) => {
   })
 }
 
+// news API added
 const loadNewsDetails = (idNews) => {
   const url = `https://openapi.programming-hero.com/api/news/category/${idNews}`
 
@@ -25,13 +29,14 @@ const loadNewsDetails = (idNews) => {
   fetch(url)
     .then(res => res.json())
     .then(data => displayNewsDetails(data.data))
+    .catch(error => console.log(error))
 }
 
-
+// news details added
 const displayNewsDetails = news => {
   const newsDetail = document.getElementById('news-details');
   newsDetail.innerHTML = ``;
-
+  // news sorting 
   news.sort((a, b) => {
     return b.total_view - a.total_view;
   });
@@ -40,31 +45,32 @@ const displayNewsDetails = news => {
     console.log(i)
     const newsDiv = document.createElement('div');
     newsDiv.innerHTML = `
-        <div class="card mb-3 p-4 mx-5">
-        <div class="row g-4">
-          <div class="col-md-3 ">
+      <div class="card mb-3 p-4 mx-5">
+      <div class="row g-4">
+      <div class="col-md-3 ">
           <img src="${i.thumbnail_url}" class="img-fluid rounded-start " alt="...">
-         </div>
+      </div>
     <div class="col-md-9">
       <div class="card-body">
-        <h5 class="card-title">${i.title}</h5>
-        <p class="card-text">${i.details.length > 300 ? i.details.slice(0, 300) : i.details}...</p>
+          <h5 class="card-title">${i.title}</h5>
+         <p class="card-text">${i.details.length > 300 ? i.details.slice(0, 300) : i.details}...</p>
         
-        <div class="d-flex justify-content-between p-4">
-        <div>
+    <div class="d-flex justify-content-between p-4">
+      <div>
           <img src ="${i.author.img}" class="rounded-circle" style="width:2rem"></img>
-          <small class="">${i.author.name ? i.author.name : 'Not Found'} </small>
-        </div>
-        <div>
-          <p >Total View:<span class="fw-semibold pe-4"> ${i.total_view ? i.total_view : 'No Data Available'}</span></p> 
-        </div>
-        <div>
-        <span onclick="loadNewsDetailsModal('${i._id}')" data-bs-toggle="modal" data-bs-target="#newsDetailModal" class="fs-2 text fw-bold"> → </span>
-        </div>
-        </div>
+          <small class="fw-semibold">${i.author.name ? i.author.name : 'Not Found'} </small>
       </div>
+      <div>
+          <p >Total View:<span class="fw-semibold pe-4"> ${i.total_view ? i.total_view : 'No Data Available'}</span></p> 
+      </div>
+      <div>
+          <span onclick="loadNewsDetailsModal('${i._id}')" data-bs-toggle="modal" data-bs-target="#newsDetailModal" class="fs-2 text fw-bold" style= "cursor:pointer"> → </span>
+      </div>
+      
     </div>
+   </div>
   </div>
+ </div>
 </div>
         
         `;
@@ -75,30 +81,36 @@ const displayNewsDetails = news => {
 }
 
 
+// modal API added
 const loadNewsDetailsModal = (id) => {
   const url = `https://openapi.programming-hero.com/api/news/${id}`;
   console.log(url)
   fetch(url)
     .then(res => res.json())
     .then(data => displayPhoneDetailsModal(data.data[0]))
+    .catch(error => console.log(error))
 }
-
+// modal details added
 const displayPhoneDetailsModal = idNum => {
   const modalTitle = document.getElementById('newsDetailModalLabel');
   modalTitle.innerText = idNum.title;
+
   const newsDetailsModalBody = document.getElementById('news-details-modal-body')
   newsDetailsModalBody.innerHTML = `
+
   <img src ="${idNum.author.img}" class="rounded-circle" style="width:3rem"></img>
+  
   <small class="">${idNum.author.name ? idNum.author.name : 'Not Found'} </small>
-  <p class="mt-2"><small>${idNum.author.published_date ? idNum.author.published_date : 'Not Found'} </small></p>
+  
+  <p class="mt-2"><small>${idNum.author.published_date ? idNum.author.published_date : 'No Data Available'} </small></p>
+  
   <p >Total View:<span class="fw-semibold mt-4"> ${idNum.total_view ? idNum.total_view : 'No Data Available'}</span></p> 
+  
   <p >Ratings:<span class="fw-semibold mt-4"> ${idNum.rating.number ? idNum.rating.number : 'No Ratings Found'}</p>
+  
   <p >Review:<span class="fw-semibold mt-4"> ${idNum.rating.badge ? idNum.rating.badge : 'No Review Found'}</p>
   `
 }
-
-
-
 
 loadNews()
 loadNewsDetails()
