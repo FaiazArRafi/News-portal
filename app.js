@@ -1,44 +1,46 @@
 const loadNews = () => {
-    const url = 'https://openapi.programming-hero.com/api/news/categories'
-    fetch(url)
-        .then(res => res.json())
-        .then(data => displayCatagories(data.data.news_category))
+  const url = 'https://openapi.programming-hero.com/api/news/categories'
+  fetch(url)
+    .then(res => res.json())
+    .then(data => displayCatagories(data.data.news_category))
 }
 
 const displayCatagories = (catagories) => {
-    const newsCatagories = document.getElementById('news-catagories');
-    catagories.forEach(i => {
-        console.log(i)
-        const catagorySpan = document.createElement('span');
-        catagorySpan.innerHTML = `
+  const newsCatagories = document.getElementById('news-catagories');
+  catagories.forEach(i => {
+    console.log(i)
+    const catagorySpan = document.createElement('span');
+    catagorySpan.innerHTML = `
         <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')"> ${i.category_name ? i.category_name : 'No News Avialable'}</h6>
         
         `;
-        newsCatagories.appendChild(catagorySpan)
-    })
+    newsCatagories.appendChild(catagorySpan)
+  })
 }
 
 const loadNewsDetails = (idNews) => {
-    const url = `https://openapi.programming-hero.com/api/news/category/${idNews}`
+  const url = `https://openapi.programming-hero.com/api/news/category/${idNews}`
 
-    console.log(url)
-    fetch(url)
-        .then(res => res.json())
-        .then(data => displayNewsDetails(data.data))
+  console.log(url)
+  fetch(url)
+    .then(res => res.json())
+    .then(data => displayNewsDetails(data.data))
 }
 
 
 const displayNewsDetails = news => {
-    const newsDetail = document.getElementById('news-details');
-    newsDetail.innerHTML = ``;
-    news.sort((a, b) => {
-        return b.total_view - a.total_view;
-    });
-    news.forEach(i => {
-        console.log(i)
-        const newsDiv = document.createElement('div');
-        newsDiv.innerHTML = `
-        <div class="card mb-3 w-75 p-4 mx-5">
+  const newsDetail = document.getElementById('news-details');
+  newsDetail.innerHTML = ``;
+
+  news.sort((a, b) => {
+    return b.total_view - a.total_view;
+  });
+
+  news.forEach(i => {
+    console.log(i)
+    const newsDiv = document.createElement('div');
+    newsDiv.innerHTML = `
+        <div class="card mb-3 p-4 mx-5">
         <div class="row g-4">
           <div class="col-md-3 ">
           <img src="${i.thumbnail_url}" class="img-fluid rounded-start " alt="...">
@@ -50,11 +52,14 @@ const displayNewsDetails = news => {
         
         <div class="d-flex justify-content-between p-4">
         <div>
-        <img src ="${i.author.img}" class="rounded-circle" style="width:2rem"></img>
-        <small class="">${i.author.name ? i.author.name : 'No Data Available'} </small>
+          <img src ="${i.author.img}" class="rounded-circle" style="width:2rem"></img>
+          <small class="">${i.author.name ? i.author.name : 'Not Found'} </small>
         </div>
         <div>
-        <p >Total View:<span class="fw-semibold pe-4">${i.total_view ? i.total_view : 'No Data Available'}</span></p>
+          <p >Total View:<span class="fw-semibold pe-4"> ${i.total_view ? i.total_view : 'No Data Available'}</span></p> 
+        </div>
+        <div>
+        <span onclick="loadNewsDetailsModal('${i._id}')" data-bs-toggle="modal" data-bs-target="#newsDetailModal" class="fs-2 text fw-bold"> → </span>
         </div>
         </div>
       </div>
@@ -63,11 +68,36 @@ const displayNewsDetails = news => {
 </div>
         
         `;
-        newsDetail.appendChild(newsDiv);
+    newsDetail.appendChild(newsDiv);
 
-    })
+  })
 
 }
+
+
+const loadNewsDetailsModal = (id) => {
+  const url = `https://openapi.programming-hero.com/api/news/${id}`;
+  console.log(url)
+  fetch(url)
+    .then(res => res.json())
+    .then(data => displayPhoneDetailsModal(data.data[0]))
+}
+
+const displayPhoneDetailsModal = idNum => {
+  const modalTitle = document.getElementById('newsDetailModalLabel');
+  modalTitle.innerText = idNum.title;
+  const newsDetailsModalBody = document.getElementById('news-details-modal-body')
+  newsDetailsModalBody.innerHTML = `
+  <img src ="${idNum.author.img}" class="rounded-circle" style="width:3rem"></img>
+  <small class="">${idNum.author.name ? idNum.author.name : 'Not Found'} </small>
+  <p class="mt-2"><small>${idNum.author.published_date ? idNum.author.published_date : 'Not Found'} </small></p>
+  <p >Total View:<span class="fw-semibold mt-4"> ${idNum.total_view ? idNum.total_view : 'No Data Available'}</span></p> 
+  <p >Ratings:<span class="fw-semibold mt-4"> ${idNum.rating.number ? idNum.rating.number : 'No Ratings Found'}</p>
+  <p >Review:<span class="fw-semibold mt-4"> ${idNum.rating.badge ? idNum.rating.badge : 'No Review Found'}</p>
+  `
+}
+
+
 
 
 loadNews()
