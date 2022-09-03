@@ -31,6 +31,9 @@ const loadNewsDetails = (idNews) => {
 const displayNewsDetails = news => {
     const newsDetail = document.getElementById('news-details');
     newsDetail.innerHTML = ``;
+    news.sort((a, b) => {
+        return b.total_view - a.total_view;
+    });
     news.forEach(i => {
         console.log(i)
         const newsDiv = document.createElement('div');
