@@ -10,12 +10,11 @@ const loadNews = () => {
 const displayCatagories = (catagories) => {
   const newsCatagories = document.getElementById('news-catagories');
   document.getElementById('news-catagories').style.cursor = "pointer";
+
   catagories.forEach(i => {
-    console.log(i)
     const catagorySpan = document.createElement('span');
     catagorySpan.innerHTML = `
         <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')"> ${i.category_name ? i.category_name : 'No News Avialable'}</h6>
-        
         `;
     newsCatagories.appendChild(catagorySpan)
   })
@@ -24,8 +23,6 @@ const displayCatagories = (catagories) => {
 // news API added
 const loadNewsDetails = (idNews) => {
   const url = `https://openapi.programming-hero.com/api/news/category/${idNews}`
-
-  console.log(url)
   fetch(url)
     .then(res => res.json())
     .then(data => displayNewsDetails(data.data))
@@ -36,13 +33,17 @@ const loadNewsDetails = (idNews) => {
 const displayNewsDetails = news => {
   const newsDetail = document.getElementById('news-details');
   newsDetail.innerHTML = ``;
+
   // news sorting 
   news.sort((a, b) => {
     return b.total_view - a.total_view;
   });
 
+  // total items in a catagory
+  document.getElementById("news-details").innerHTML = `
+  <div class="my-3 container border w-75 py-3"><span class="fw-bold"> ${news.length} </span> items found </div>`;
+
   news.forEach(i => {
-    console.log(i)
     const newsDiv = document.createElement('div');
     newsDiv.innerHTML = `
       <div class="card mb-3 p-4 mx-5">
@@ -84,7 +85,6 @@ const displayNewsDetails = news => {
 // modal API added
 const loadNewsDetailsModal = (id) => {
   const url = `https://openapi.programming-hero.com/api/news/${id}`;
-  console.log(url)
   fetch(url)
     .then(res => res.json())
     .then(data => displayPhoneDetailsModal(data.data[0]))
@@ -113,4 +113,3 @@ const displayPhoneDetailsModal = idNum => {
 }
 
 loadNews()
-loadNewsDetails()
