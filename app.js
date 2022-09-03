@@ -11,7 +11,7 @@ const displayCatagories = (catagories) => {
         console.log(i)
         const catagorySpan = document.createElement('span');
         catagorySpan.innerHTML = `
-        <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')"> ${i.category_name}</h6>
+        <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')"> ${i.category_name ? i.category_name : 'No News Avialable'}</h6>
         
         `;
         newsCatagories.appendChild(catagorySpan)
@@ -20,7 +20,7 @@ const displayCatagories = (catagories) => {
 
 const loadNewsDetails = (idNews) => {
     const url = `https://openapi.programming-hero.com/api/news/category/${idNews}`
-    // console.log('bla bla', idNews)
+
     console.log(url)
     fetch(url)
         .then(res => res.json())
@@ -35,7 +35,7 @@ const displayNewsDetails = news => {
         console.log(i)
         const newsDiv = document.createElement('div');
         newsDiv.innerHTML = `
-        <div class="card mb-3 w-75 p-4 float-end">
+        <div class="card mb-3 w-75 p-4 mx-5">
         <div class="row g-4">
           <div class="col-md-3 ">
           <img src="${i.thumbnail_url}" class="img-fluid rounded-start " alt="...">
@@ -43,7 +43,7 @@ const displayNewsDetails = news => {
     <div class="col-md-9">
       <div class="card-body">
         <h5 class="card-title">${i.title}</h5>
-        <p class="card-text">$</p>
+        <p class="card-text">${i.details.length > 300 ? i.details.slice(0, 300) : i.details}...</p>
         
         <div class="d-flex justify-content-between p-4">
         <div>
