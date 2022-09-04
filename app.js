@@ -14,11 +14,24 @@ const displayCatagories = (catagories) => {
   catagories.forEach(i => {
     const catagorySpan = document.createElement('span');
     catagorySpan.innerHTML = `
-        <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')"> ${i.category_name ? i.category_name : 'No News Avialable'}</h6>
+        <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')toggleSpinner(true)"> ${i.category_name ? i.category_name : 'No News Avialable'}</h6>
         `;
     newsCatagories.appendChild(catagorySpan)
   })
+
 }
+
+// loader (spinner) function
+const toggleSpinner = isLoading => {
+  const loaderSection = document.getElementById('loader')
+  if (isLoading === true) {
+    loaderSection.classList.remove('d-none')
+  }
+  else {
+    loaderSection.classList.add('d-none')
+  }
+}
+
 
 // news API added
 const loadNewsDetails = (idNews) => {
