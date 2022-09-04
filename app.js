@@ -8,23 +8,25 @@ const loadNews = () => {
 }
 // catagories details added
 const displayCatagories = (catagories) => {
+
   const newsCatagories = document.getElementById('news-catagories');
   document.getElementById('news-catagories').style.cursor = "pointer";
 
   catagories.forEach(i => {
     const catagorySpan = document.createElement('span');
     catagorySpan.innerHTML = `
-        <h6 class="mx-4" onclick="loadNewsDetails('${i.category_id}')toggleSpinner(true)"> ${i.category_name ? i.category_name : 'No News Avialable'}</h6>
+        <h6 class="mx-4 new" onclick="loadNewsDetails('${i.category_id}')"> ${i.category_name ? i.category_name : 'No News Avialable'} </h6>
         `;
     newsCatagories.appendChild(catagorySpan)
-  })
 
+  })
 }
+
 
 // loader (spinner) function
 const toggleSpinner = isLoading => {
   const loaderSection = document.getElementById('loader')
-  if (isLoading === true) {
+  if (isLoading) {
     loaderSection.classList.remove('d-none')
   }
   else {
@@ -46,6 +48,7 @@ const loadNewsDetails = (idNews) => {
 const displayNewsDetails = news => {
   const newsDetail = document.getElementById('news-details');
   newsDetail.innerHTML = ``;
+  toggleSpinner(true)
 
   // news sorting 
   news.sort((a, b) => {
@@ -91,6 +94,7 @@ const displayNewsDetails = news => {
     newsDetail.appendChild(newsDiv);
 
   })
+  toggleSpinner(false)
 
 }
 
